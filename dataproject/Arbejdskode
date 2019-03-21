@@ -1,0 +1,69 @@
+import pandas as pd
+import re
+data = pd.read_csv(r"C:\Users\Resenbro\Desktop\stud.polit\8. Semester\Python\spillere.csv")
+
+
+#Vi udvælger de interessante variable
+variable = ['name','position','current_salary','weight',"height"]
+data=data[variable]
+
+#Vi fjerner alle de spillere uden angiven løn eller uden angiven højde eller vægt
+data = data.dropna(subset=["height"])
+data=data.dropna(subset=["current_salary"])
+data=data.dropna(subset=["weight"])
+
+#Vi laver en funktion, der konverterer feet-inches til centimeter. 
+def calcAmericanoHeighToCM(x):
+    x = str(x)
+    m = x.split("-")
+    cm = float(m[0])*30.48 + float(m[1]) * 2.54 
+    return(cm)
+
+#Vi bruger funktionen til at konverte højderne fra feet-inches til centimeter
+data['height'] = data.height.apply(calcAmericanoHeighToCM)
+
+#Vi fjerner kommaet i alle lønninger for senere at kunne konvertere dem til integers
+data["current_salary"]=data["current_salary"].str.replace(',','') 
+
+#Vi udvælger de kolonner, der skal konverteres til integers
+cols = ['current_salary','weight',"height"]  
+
+#Laver strings om til numeriske værdier i valgte kolonner
+for col in cols: 
+    data[col] = pd.to_numeric(data[col]) 
+
+#Vægten konverteres fra pund til kilo
+data["weight"]=data["weight"]*0.45359237 
+
+#Forsimpler positioner 
+#Linebackers
+data["position"]=data["position"].replace({"OLB":"LB","ILB":"LB","LB-DE":"LB"})
+#Defensive Backs
+data["position"]=data["position"].replace({"S":"DB","CB":"DB","SS":"DB","FS":"DB"})
+#Defensive Linemen
+data["position"]=data["position"].replace({"DT":"DL","DE":"DL","NT":"DL","DE-C":"DL"})
+#Offensive Linemen
+data["position"]=data["position"].replace({"G":"OL","T":"OL","OT":"OL","OG":"OL","LS":"OL","LS,TE":"OL","C":"OL"})
+#Skill Positions
+data["position"]=data["position"].replace({"WR":"SP","RB":"SP","FB":"SP","TE":"SP","WR/RB":"SP"})
+#Special Teams
+data["position"]=data["position"].replace({"K":"ST","P":"ST"})
+
+#Histogram1:
+#Y=Gennemsnitsløn
+#X= Position
+
+#Scatterplot:
+#Y=Højde
+#X=Vægt
+#Størrelse antallet af spillere
+
+
+#Data printes
+
+positioner=data.groupby('position')["name"].nunique()
+print(positioner)
+
+loen=data.groupby('position')["current_salary"].mean()
+print(loen)
+#print(data)
