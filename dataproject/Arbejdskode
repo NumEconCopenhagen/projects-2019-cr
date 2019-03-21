@@ -1,5 +1,8 @@
 import pandas as pd
 import re
+import matplotlib.pyplot as plt
+import numpy as np
+import statsmodels.api as sm
 data = pd.read_csv(r"C:\Users\Resenbro\Desktop\stud.polit\8. Semester\Python\spillere.csv")
 
 
@@ -13,14 +16,14 @@ data=data.dropna(subset=["current_salary"])
 data=data.dropna(subset=["weight"])
 
 #Vi laver en funktion, der konverterer feet-inches til centimeter. 
-def calcAmericanoHeighToCM(x):
+def calcAmericanHeightToCM(x):
     x = str(x)
     m = x.split("-")
     cm = float(m[0])*30.48 + float(m[1]) * 2.54 
     return(cm)
 
 #Vi bruger funktionen til at konverte højderne fra feet-inches til centimeter
-data['height'] = data.height.apply(calcAmericanoHeighToCM)
+data['height'] = data.height.apply(calcAmericanHeightToCM)
 
 #Vi fjerner kommaet i alle lønninger for senere at kunne konvertere dem til integers
 data["current_salary"]=data["current_salary"].str.replace(',','') 
@@ -49,21 +52,74 @@ data["position"]=data["position"].replace({"WR":"SP","RB":"SP","FB":"SP","TE":"S
 #Special Teams
 data["position"]=data["position"].replace({"K":"ST","P":"ST"})
 
-#Histogram1:
-#Y=Gennemsnitsløn
-#X= Position
+#Gennemsnitsløn per position
+loen=data.groupby('position')["current_salary"].mean()
+#Unikke positioner
+positioner=data.position.unique()
+positioner=sorted(positioner)
+#Antal på hver position
+tael_positioner=data.groupby('position')["name"].nunique()
+#Plot
+farver=('red','blue','yellow','green','pink','black','orange')
+#plt.scatter(positioner, loen/1000000, s=tael_positioner*1,c=farver)
+#plt.xlabel("Position")
+#plt.ylabel("Average Salary (USD millions)")
+#plt.title("Average Salary by Position",fontsize=20)
+#plt.grid(True)
 
-#Scatterplot:
-#Y=Højde
-#X=Vægt
+
+#Højde og vægt, position:
+hoejde=data.groupby('position')["height"].mean()
+vaegt=data.groupby('position')["weight"].mean()
+#plt.scatter(vaegt,hoejde,s=tael_positioner,c=farver)
+#plt.xlabel("Weight (kg)")
+#plt.ylabel("Height (cm)")
+#plt.title("Average Weight and Height by Position", fontsize=20)
+#plt.grid(True)
+#plt.text(100,192,"QB")
+#plt.text(89,183,"DB")
+#plt.text(91,185.5,"ST")
+#plt.text(98,186.5,"SP")
+#plt.text(107,188,"LB")
+#plt.text(129.5,192.5,"DL")
+#plt.text(137.5,193.5,"OL")
+
+#OL, løn og vægt
+OLdata=data.loc[data["position"]=="OL"]
+OLdata.loc[:,"current_salary"]=OLdata["current_salary"].copy()/1000000
+
+plt.scatter(OLdata["weight"],OLdata["current_salary"],c="green")
+plt.xlabel("Weight (kg)")
+plt.ylabel("Salary (USD millions)")
+plt.title("Weight and Salary for Offensive Linemen",fontsize=20)
+plt.grid(True)
+
+
+plt.plot(np.unique(OLdata["weight"]), np.poly1d(np.polyfit(OLdata["weight"], OLdata["current_salary"], 1))(np.unique(OLdata["weight"])),c="red")
+
+
+#regression salary, vægt, højde:
+# Laver en regression
+
+
+#Laver vores variabler
+Y = np.array(OLdata["current_salary"])
+X = np.column_stack((OLdata["height"], OLdata["weight"]))
+X = sm.add_constant(X)
+
+#Ser sammenhængen
+results = sm.OLS(Y, X).fit()
+print(results.summary())
+
+
 #Størrelse antallet af spillere
 
 
 #Data printes
 
-positioner=data.groupby('position')["name"].nunique()
-print(positioner)
 
-loen=data.groupby('position')["current_salary"].mean()
-print(loen)
+#print(positioner)
+
+
+#print(loen)
 #print(data)
