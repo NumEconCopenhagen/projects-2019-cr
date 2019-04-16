@@ -1,0 +1,16 @@
+#To acces data:
+
+#Step 1:
+#Download kaggle package
+#Download pandas package
+
+#Step 2: 
+#Create user on kaggle.com
+
+#Step 3:
+#Run this code:
+
+import kaggle
+import pandas as pd
+
+kaggle.api.dataset_download_files("zynicide/nfl-football-player-stats", unzip=True)
