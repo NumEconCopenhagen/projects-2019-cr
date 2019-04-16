@@ -12,3 +12,4 @@ Step 2: Run "Dataproject.ipynb"
 
 Our binder:
 https://mybinder.org/v2/gh/NumEconCopenhagen/projects-2019-cr.git/master?urlpath=lab
+https://hub.mybinder.org/user/numeconcopenhag-rojects-2019-cr-2teuli20/tree
