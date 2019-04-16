@@ -7,6 +7,7 @@ Even if you do not know anything about the American national sport, these statem
 This paper will examine just how big American football players in the National Football League (NFL) are and how much money they make. Do bigger players make more money? How different are the body types of the players when sorting by positions? Which position suits your body type the best? 
 
 Step 1: Follow the instructions in "DownloadData.ipynb" and run the code to access the raw data.
+
 Step 2: Run "Dataproject.ipynb" 
 
 Our binder:
