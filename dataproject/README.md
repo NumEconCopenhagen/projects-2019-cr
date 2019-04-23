@@ -8,7 +8,7 @@ This paper will examine just how big American football players in the National F
 
 "DownloadData.ipynb" is provided to see how we downloaded the data in the first place.
 
-As we already have downloaded the data to the folder, the code in "DataProject" should be running without the need to run the "DownloadData" itself. 
+As we have downloaded the data to the folder already , the code in "DataProject" should be running without the need to run the "DownloadData" itself. 
 
 Our binder:
 https://mybinder.org/v2/gh/NumEconCopenhagen/projects-2019-cr.git/master?urlpath=lab
