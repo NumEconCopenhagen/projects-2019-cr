@@ -1,3 +1,3 @@
 # Modelproject
 
-Should contain a short introduction to your project, and show how to produce your results.
+we are working with the Solow-model with human capital.
